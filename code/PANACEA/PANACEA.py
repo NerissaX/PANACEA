@@ -22,7 +22,7 @@ def panacea(cancer_name, k, cancer_genes, target1, nodetype):
 
     # compute PEN_diff, ppr_diff, distance_diff
     # this function will take several hours for each cancer network
-    # PEN_diff(candidate3, k, cancer_genes, nodetype, target1, cancer_network, cancer_name)
+    PEN_diff(candidate3, k, cancer_genes, nodetype, target1, cancer_network, cancer_name)
 
     t3_in_network = 0
     for u in candidate3:
