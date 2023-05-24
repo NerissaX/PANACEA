@@ -46,7 +46,7 @@ def panacea(cancer_name, k, cancer_genes, target1, nodetype):
         f.write('\n')
     f.close()
     # find the delta histogram and range constraint of PEN-diff, ppr-diff, average closeness and distance-diff
-    deltamin, deltamax = delta_histogram(cancer_name, nodetype, k)
+    deltamin, deltamax = delta_histogram(cancer_name, nodetype, k, bucket_no=5)
 
 
 if __name__ == "__main__":
