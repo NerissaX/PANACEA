@@ -6,7 +6,8 @@ from PANACEA_plot import plot_deltaHist
 from PANACEA_plot import plot_diff_distribution
 
 
-def delta_histogram(cancer_name, nodetype, k):
+# delta histogram profiling of a cancer network
+def delta_histogram(cancer_name, nodetype, k, bucket_no = 5):
     print('**********************************************************************************')
     print(f'{cancer_name}:')
     # known_target is the dataframe of ppr-diff, pen-diff, distance-diff, average closeness centrality
@@ -47,12 +48,12 @@ def delta_histogram(cancer_name, nodetype, k):
         candidate_target_dict = {}
         ranked_results_dict = {}
         for fn in ['PEN-diff', 'Distance-diff', 'ppr-diff']:
-            known_target_dict[fn] = known_target.loc[:, [fn]]
+            known_target_dict[fn] = known_target.loc[:, [fn]]  # extract known target combination from candidates
             candidate_target_dict[fn] = candidate_target.loc[:, [fn, 'known targets']]
             ranked_results_dict[fn].to_csv(
                 f'{output_path}//{cancer_name}_{nodetype}//{cancer_name}_{nodetype}_{k}_{fn}_rankedresults.txt',
                 header=True,
-                index=True, sep='\t')
+                index=True, sep='\t')  # rank a feature in descending order
 
     else:  # if the ranked results already exist, skip the ranking step
         known_target_dict = {}
@@ -65,11 +66,12 @@ def delta_histogram(cancer_name, nodetype, k):
                 header=0,
                 index_col=[0, 1], sep='\t')
 
-    deltamin = {}  # deltamin in descending order
-    deltamax = {}
+    deltamin = {}  # deltamin in descending order of the best bucket
+    deltamax = {}  # deltamax in descending order
 
-    bucket_no = 5  # fix the number of buckets
     # for each features in PEN-diff, ppr-diff, distance-diff, dppr-diff and avg closeness, find delta histogram
+    
+    # first group the candidates and known targets by a feature with bucket_no
     for fn in ['PEN-diff', 'Distance-diff', 'ppr-diff']:
         ranked_results = ranked_results_dict[fn]
         known_target_df = known_target_dict[fn]
@@ -83,16 +85,17 @@ def delta_histogram(cancer_name, nodetype, k):
         reverse_range_p = range_p.copy()
         reverse_range_p.reverse()
         group_name = []
-        for i in range(bucket_no):
-            gname = f'{round(reverse_range_p[i + 1], 4)} - {round(reverse_range_p[i], 4)}'
+        for i in range(bucket_no):  # for each bucket
+            gname = f'{round(reverse_range_p[i + 1], 4)} - {round(reverse_range_p[i], 4)}'  # set the name of the bucket (range)
             group_name.append(gname)
-            # add a column to record the group name
+            # assign the group name for each value within the corresponding the range
             ranked_results.loc[ranked_results[fn] <= reverse_range_p[i], 'group'] = gname
             known_target_df.loc[known_target_df[fn] <= reverse_range_p[i], 'group'] = gname
         group_name.reverse()
 
-        allgroups = []
-        knowngroups = []
+        allgroups = []  # the groups(buckets) for all candidates
+        knowngroups = []  # the groups(buckets) for known target combinations
+        
         # find delta histogram, deltamin, deltamax in descending order
         # all the steps are the same as above
         for i in range(bucket_no):
@@ -103,20 +106,21 @@ def delta_histogram(cancer_name, nodetype, k):
             knowngroups.append(
                 known_target_dict[fn].loc[known_target_dict[fn]['group'] == group_name[i], [fn]][fn].sort_values(
                     ascending=False))
-        delta_percent_groups = []
-        all_percentage = []
-        max_count = []
-        known_count = []
+            
+        delta_percent_groups = []  # the coverage of known combination for top m% in each bucket
+        all_percentage = []  # no. of known combinations in a bucket / no. of all known combinations * 100% 
+        max_count = []  # the number of candidate combinations in a bucket
+        known_count = []  # the number of known target combinations in a bucekt
         for i in range(bucket_no):
             all_percent = len(knowngroups[i]) / len(known_target_df)
             all_percentage.append(all_percent)
             max_count.append(len(allgroups[i]))
             known_count.append(len(knowngroups[i]))
             temp_dict = {}
+            # for top m% in a bucket, compute the known combination coverage
             for m in [0.01, 0.10, 0.20, 0.50]:
                 count = (knowngroups[i] >= allgroups[i][floor(len(allgroups[i]) * m)]).sum()
                 temp = count / len(knowngroups[i])
-                # temp = count / len(known_target_df)
                 temp_dict[m] = temp
             delta_percent_groups.append(temp_dict)
 
@@ -125,10 +129,11 @@ def delta_histogram(cancer_name, nodetype, k):
             for j in range(4):
                 df.iloc[i, j] = list(delta_percent_groups[i].values())[j]
         df['range'] = group_name.copy()
-        s = [df.loc[i, '50%'] for i in range(bucket_no)]
+        s = [df.loc[i, '50%'] for i in range(bucket_no)]  # find the index of the bucket with highest coverage
 
-        delta_range = df.loc[s.index(np.nanmax(s)), 'range']
-        constraint_known = knowngroups[s.index(np.nanmax(s))]
+        delta_range = df.loc[s.index(np.nanmax(s)), 'range']  # find the corresponding range constraint
+        constraint_known = knowngroups[s.index(np.nanmax(s))]  # extract all known combinations in that range
+        # write to file
         constraint_known.to_csv(
             f'{output_path}//{cancer_name}_{nodetype}//{cancer_name}_{nodetype}_{fn}_constraint_range.txt',
             header=True,
@@ -137,14 +142,14 @@ def delta_histogram(cancer_name, nodetype, k):
         delta_min = float(delta_range[0])
         delta_max = float(delta_range[1])
 
-        # print the results on the
+        # print the results on the screen
         print('----------------------------------------------------------------------------------------')
         print(f'The delta_min of {fn} is {delta_min}')
         print(f'The delta_max of {fn} is {delta_max}')
         print(f'The coverage of {fn} is {list((delta_percent_groups[s.index(np.nanmax(s))]).values())}')
         print(
             f'There are {max_count[s.index(np.nanmax(s))]} candidate combinations in the constraint range.')
-        plot_deltaHist(df,cancer_name,nodetype,fn)
+        plot_deltaHist(df,cancer_name,nodetype,fn)  # plot the delta histograms
         deltamin[fn] = delta_min
         deltamax[fn] = delta_max
 
