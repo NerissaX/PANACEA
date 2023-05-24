@@ -1,6 +1,8 @@
 import itertools
 from PANACEA_constant import *
 
+''' Compute PEN-diff, Distance-diff, ppr-diff'''
+
 
 # remove the nodes in inputnodes that are not in the given network
 def remove_nodes(inputnodes, cancer_network):
@@ -11,8 +13,14 @@ def remove_nodes(inputnodes, cancer_network):
     return inputnodes
 
 
+# candidates - a set of candidate nodes
+# k - the nubmer of nodes in a combination
+# cancer_genes: set of cancer_genes(oncogenes, TSG, biomarkers that the user wants to use)
+# nodetype: string: the type of cancer_genes (e.g. 'oncogenes')
+# target_nodes: a set of targets related to a specific cancer
+# cancer_network: a cancer-specific signaling network
 def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network,
-             cancer_name):  # sort the candidate combination
+             cancer_name): 
 
     # clean the drug targets data
     drug_targets = target_df.copy()
@@ -38,7 +46,6 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
     drug_targets.dropna(subset=['Targets'], inplace=True)  # delete the rows with no targets
     drug_targets.set_index(['Product'], inplace=True)
 
-    # drug-indication summary
     if not os.path.exists(f'{output_path}/drug_targets.csv'):
         drugs = pd.DataFrame(0, index=list(drug_targets.index))
         ind = 0
@@ -71,6 +78,7 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
         if u not in cancer_genes:
             othernodes.append(u)
 
+    # group the dataframes by cancer_genes or non_cancer_genes
     PEN_cancer_df = PEN_distance_df.loc[:, cancer_genes]
     PEN_other_df = PEN_distance_df.loc[:, othernodes]
     ppr_cancer_df = ppr_df.loc[:, cancer_genes]
@@ -162,17 +170,17 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
         ppr_othergenes_dict = {}
         ppr_diff_dict = {}
         count = 0
-        for subset in itertools.combinations(candidates, k):
-            mean_po = (PEN_cancer_df.loc[list(subset), :]).mean(axis=1).mean()
-            mean_pr = (PEN_other_df.loc[list(subset), :]).mean(axis=1).mean()
-            mean_do = (dist_cancer_df.loc[list(subset), :]).mean(axis=1).mean()
+        for subset in itertools.combinations(candidates, k):  # for each combination
+            mean_po = (PEN_cancer_df.loc[list(subset), :]).mean(axis=1).mean() # PEN-DISTANCE to cancergenes
+            mean_pr = (PEN_other_df.loc[list(subset), :]).mean(axis=1).mean()  # PEN-DISTANCE to other genes
+            mean_do = (dist_cancer_df.loc[list(subset), :]).mean(axis=1).mean()  # distance
             mean_dr = (dist_other_df.loc[list(subset), :]).mean(axis=1).mean()
-            mean_ppro = (ppr_cancer_df.loc[list(subset),]).mean(axis=1).mean()
+            mean_ppro = (ppr_cancer_df.loc[list(subset),]).mean(axis=1).mean()  # ppr
             mean_pprr = (ppr_other_df.loc[list(subset), :]).mean(axis=1).mean()
             pen_diff = mean_pr - mean_po  # difference between PEN_distance to cancergenes and other nodes
             distance_diff = mean_dr - mean_do
             ppr_diff = mean_pprr - mean_ppro
-            PEN_distance_cancergenes_dict[subset] = mean_po
+            PEN_distance_cancergenes_dict[subset] = mean_po 
             PEN_distance_othergenes_dict[subset] = mean_pr
             PEN_diff_dict[subset] = pen_diff
             dist_cancergenes_dict[subset] = mean_do
