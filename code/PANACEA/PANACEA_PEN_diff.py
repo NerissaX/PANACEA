@@ -20,7 +20,7 @@ def remove_nodes(inputnodes, cancer_network):
 # target_nodes: a set of targets related to a specific cancer
 # cancer_network: a cancer-specific signaling network
 def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network,
-             cancer_name): 
+             cancer_name):
 
     # clean the drug targets data
     drug_targets = target_df.copy()
@@ -46,8 +46,8 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
     drug_targets.dropna(subset=['Targets'], inplace=True)  # delete the rows with no targets
     drug_targets.set_index(['Product'], inplace=True)
 
-    if not os.path.exists(f'{output_path}/drug_targets.csv'):
-        drugs = pd.DataFrame(0, index=list(drug_targets.index))
+    if not os.path.exists(f'{output_path}/{cancer_name}_{nodetype}/{cancer_name}_{nodetype}_drug_targets.csv'):
+        drugs = pd.DataFrame(index=list(drug_targets.index))
         ind = 0
         indi = []
         # drug's hallmark score = no. of targets with this hallmark/no. of targets of the drug
@@ -55,11 +55,11 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
             indi.append(drug_targets.loc[drug, 'Indications'])
             ind += 1
         drugs['Indications'] = indi
-        pd.DataFrame.to_csv(drugs, f'{output_path}/drug_targets.csv')  # save as a file
+        pd.DataFrame.to_csv(drugs, f'{output_path}/{cancer_name}_{nodetype}/{cancer_name}_{nodetype}_drug_targets.csv')  # save as a file
 
     else:
         # drugs is a dataframe with all the drugs for cancer and their hallmark score
-        drugs = pd.read_csv(f'{output_path}/drug_targets.csv', sep=',',
+        drugs = pd.read_csv(f'{output_path}/{cancer_name}_{nodetype}/{cancer_name}_{nodetype}_drug_targets.csv', sep=',',
                             index_col=0, header=0)
 
     # remove the nodes not in the cancer network
@@ -180,7 +180,7 @@ def PEN_diff(candidates, k, cancer_genes, nodetype, target_nodes, cancer_network
             pen_diff = mean_pr - mean_po  # difference between PEN_distance to cancergenes and other nodes
             distance_diff = mean_dr - mean_do
             ppr_diff = mean_pprr - mean_ppro
-            PEN_distance_cancergenes_dict[subset] = mean_po 
+            PEN_distance_cancergenes_dict[subset] = mean_po
             PEN_distance_othergenes_dict[subset] = mean_pr
             PEN_diff_dict[subset] = pen_diff
             dist_cancergenes_dict[subset] = mean_do
