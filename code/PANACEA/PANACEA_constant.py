@@ -10,9 +10,6 @@ project_path = os.path.dirname(os.path.dirname(os.getcwd()))
 output_path = os.path.join(project_path, 'Output')  # output path
 input_path = os.path.join(project_path, 'Input')  # input path
 
-for ps in [output_path, f'{output_path}//plot']:
-    if not os.path.exists(ps):
-        os.makedirs(ps, exist_ok=True)
 
 # define the constant and dataset we will use in the project
 target_df = pd.read_csv(os.path.join(input_path, 'Drug targets.csv'), encoding="unicode_escape")
