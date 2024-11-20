@@ -15,7 +15,7 @@ def delta_histogram(cancer_name, nodetype, k, bucket_no=5):
 
     Parameters:
     - cancer_name: str, name of the cancer subtype.
-    - nodetype: str, type of cancer nodes used (e.g., 'oncogenes').
+    - nodetxype: str, type of cancer nodes used (e.g., 'oncogenes').
     - k: int, number of nodes in a combination.
     - bucket_no: int, number of buckets to divide the data into (default is 5).
 
