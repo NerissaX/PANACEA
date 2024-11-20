@@ -4,87 +4,87 @@ Project Structure
 The project consists of several Python modules, each responsible for specific tasks within the analysis pipeline.
 Below is a summary of each module, their purposes, and how they interact with one another.
 
-1. Panacea_constant.py
-
-	•	Purpose: Defines constants, global variables, datasets, and file paths used throughout the project.
-	•	Key Data Loaded:
-        •	Drug Targets Dataset: Information on known drug targets.
-        •	Oncogenes Dataset: List of known oncogenes.
-        •	Signaling Network Dataset: The comprehensive signaling network used for analysis.
-	•	Usage: Must be run first to set up the environment. It is imported by other modules that require access to the constants and datasets.
-
-2. Panacea_plot.py
-
-	•	Purpose: Provides functions for generating plots and visualizations.
-	•	Key Functions:
-        •	plot_features(...): Plots histograms and distributions of network features.
-        •	plot_diff_distribution(...): Plots the distribution of differences in features.
-        •	plot_deltaHist(...): Plots delta histograms for profiling.
-	•	Usage: Used by multiple modules to generate plots for analysis and visualization.
-
-3. PanaceaStats.py
-
-	•	Purpose: Computes and saves network statistics such as degree centrality, closeness centrality, betweenness centrality, and eigenvector centrality.
-	•	Key Functions:
-        •	compute_network_stats(graph, filename, save_to): Calculates various network statistics and writes them to files.
-        •	plot_network_stats(...): Generates histograms for the computed statistics.
-	•	Usage: Called by Panacea_Construct.py to compute statistics of the constructed cancer networks.
-
-4. Panacea_PEN_dist.py
-
-	•	Purpose: Computes the Personalized PageRank (PPR), differential PPR (dPPR), and PEN distance for a given network.
-	•	Key Functions:
-        •	compute_PEN_distance(...): Computes PPR, dPPR, and PEN distance for the network.
-        •	PEN_distance_alpha(...): Computes these metrics for different alpha values.
-	•	Usage: Used by Panacea_Construct.py to compute distances after constructing or modifying networks.
-
-5. Panacea_distance.py
-
-	•	Purpose: Computes the shortest path lengths between all pairs of nodes in a given network.
-	•	Key Function:
-	    •	compute_shortest_distance(G, save_to): Calculates shortest distances and saves them.
-	•	Usage: Called by Panacea_Construct.py to compute shortest distances in the network.
-
-6. Panacea_Construct.py
-
-	•	Purpose:
-        •	Identifies genes associated with specific cancer subtypes.
-        •	Constructs the smallest connected network containing all input cancer genes.
-        •	Computes network statistics, distances, and plots features.
-	•	Key Functions:
-        •	find_subgene(...): Finds oncogenes, target genes, and non-target genes for a specific cancer subtype.
-        •	constructNetwork(...): Builds the cancer network and computes required metrics.
-	•	Usage: Called from the main script to construct cancer networks for each cancer type.
-
-7. Panacea_Pen_diff.py
-
-	•	Purpose: Computes differences in PEN-distance, Distance, and PPR between cancer genes and other nodes for known drug target combinations and candidate combinations.
-	•	Key Function:
-        •	PEN_diff(...): Performs the computation and saves results.
-	•	Usage: Used in the main script after constructing the network to compute differences and prepare data for profiling.
-
-8. Panacea_profiling_comb.py
-
-	•	Purpose: Performs delta histogram profiling of the cancer network to identify the best constraints for selecting target combinations.
-	•	Key Function:
-        •	delta_histogram(...): Profiles combinations and generates delta histograms.
-	•	Usage: Called from the main script to analyze and profile the combinations based on computed differences.
-
-9. Panacea_target.py
-
-	•	Purpose: Writes the target combinations within the constraint range to a file for further analysis or reporting.
-	•	Key Function:
-        •	target(...): Saves the constrained target combinations identified during profiling.
-	•	Usage: Called by Panacea_profiling_comb.py.
-
-10. Main Script (PANACEA.py)
-
-	•	Purpose: Orchestrates the entire analysis process by coordinating the use of all the modules above.
-	•	Key Steps:
-        •	Imports necessary modules.
-        •	Loops over cancer types to perform analysis.
-        •	Calls functions to find genes, construct networks, compute differences, and profile combinations.
-	•	Usage: Execute this script to run the entire analysis pipeline.
+	1. Panacea_constant.py
+	
+		•	Purpose: Defines constants, global variables, datasets, and file paths used throughout the project.
+		•	Key Data Loaded:
+		        •	Drug Targets Dataset: Information on known drug targets.
+		        •	Oncogenes Dataset: List of known oncogenes.
+		        •	Signaling Network Dataset: The comprehensive signaling network used for analysis.
+		•	Usage: Must be run first to set up the environment. It is imported by other modules that require access to the constants and datasets.
+	
+	2. Panacea_plot.py
+	
+		•	Purpose: Provides functions for generating plots and visualizations.
+		•	Key Functions:
+		        •	plot_features(...): Plots histograms and distributions of network features.
+		        •	plot_diff_distribution(...): Plots the distribution of differences in features.
+		        •	plot_deltaHist(...): Plots delta histograms for profiling.
+		•	Usage: Used by multiple modules to generate plots for analysis and visualization.
+	
+	3. PanaceaStats.py
+	
+		•	Purpose: Computes and saves network statistics such as degree centrality, closeness centrality, betweenness centrality, and eigenvector centrality.
+		•	Key Functions:
+		        •	compute_network_stats(graph, filename, save_to): Calculates various network statistics and writes them to files.
+		        •	plot_network_stats(...): Generates histograms for the computed statistics.
+		•	Usage: Called by Panacea_Construct.py to compute statistics of the constructed cancer networks.
+	
+	4. Panacea_PEN_dist.py
+	
+		•	Purpose: Computes the Personalized PageRank (PPR), differential PPR (dPPR), and PEN distance for a given network.
+		•	Key Functions:
+		        •	compute_PEN_distance(...): Computes PPR, dPPR, and PEN distance for the network.
+		        •	PEN_distance_alpha(...): Computes these metrics for different alpha values.
+		•	Usage: Used by Panacea_Construct.py to compute distances after constructing or modifying networks.
+	
+	5. Panacea_distance.py
+	
+		•	Purpose: Computes the shortest path lengths between all pairs of nodes in a given network.
+		•	Key Function:
+			•	compute_shortest_distance(G, save_to): Calculates shortest distances and saves them.
+		•	Usage: Called by Panacea_Construct.py to compute shortest distances in the network.
+	
+	6. Panacea_Construct.py
+	
+		•	Purpose:
+		        •	Identifies genes associated with specific cancer subtypes.
+		        •	Constructs the smallest connected network containing all input cancer genes.
+		        •	Computes network statistics, distances, and plots features.
+		•	Key Functions:
+		        •	find_subgene(...): Finds oncogenes, target genes, and non-target genes for a specific cancer subtype.
+		        •	constructNetwork(...): Builds the cancer network and computes required metrics.
+		•	Usage: Called from the main script to construct cancer networks for each cancer type.
+	
+	7. Panacea_Pen_diff.py
+	
+		•	Purpose: Computes differences in PEN-distance, Distance, and PPR between cancer genes and other nodes for known drug target combinations and candidate combinations.
+		•	Key Function:
+		        •	PEN_diff(...): Performs the computation and saves results.
+		•	Usage: Used in the main script after constructing the network to compute differences and prepare data for profiling.
+	
+	8. Panacea_profiling_comb.py
+	
+		•	Purpose: Performs delta histogram profiling of the cancer network to identify the best constraints for selecting target combinations.
+		•	Key Function:
+		        •	delta_histogram(...): Profiles combinations and generates delta histograms.
+		•	Usage: Called from the main script to analyze and profile the combinations based on computed differences.
+	
+	9. Panacea_target.py
+	
+		•	Purpose: Writes the target combinations within the constraint range to a file for further analysis or reporting.
+		•	Key Function:
+		        •	target(...): Saves the constrained target combinations identified during profiling.
+		•	Usage: Called by Panacea_profiling_comb.py.
+	
+	10. Main Script (PANACEA.py)
+	
+		•	Purpose: Orchestrates the entire analysis process by coordinating the use of all the modules above.
+		•	Key Steps:
+		        •	Imports necessary modules.
+		        •	Loops over cancer types to perform analysis.
+		        •	Calls functions to find genes, construct networks, compute differences, and profile combinations.
+		•	Usage: Execute this script to run the entire analysis pipeline.
 
 Prerequisites
 
