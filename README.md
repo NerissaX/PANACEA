@@ -148,7 +148,7 @@ The following modules are interdependent:
 	•	Panacea_Pen_diff.py and Panacea_profiling_comb.py are used sequentially for profiling combinations.
 	•	Panacea_target.py saves the results from profiling.
 
-panacea-project/
+panacea-project//
 ├── Panacea_constant.py
 ├── PanaceaOtherFunc.py
 ├── Panacea_plot.py
