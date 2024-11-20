@@ -147,8 +147,8 @@ The following modules are interdependent:
 	•	Panacea_Construct.py relies on the above modules to build and analyze networks.
 	•	Panacea_Pen_diff.py and Panacea_profiling_comb.py are used sequentially for profiling combinations.
 	•	Panacea_target.py saves the results from profiling.
-
-panacea-project//
+```
+panacea-project/
 ├── Panacea_constant.py
 ├── PanaceaOtherFunc.py
 ├── Panacea_plot.py
@@ -161,16 +161,17 @@ panacea-project//
 ├── Panacea_target.py
 ├── panacea.py
 ├── datasets/
-│   ├── drug_targets.csv
-│   ├── oncogenes.csv
-│   └── signaling_network.gexf
+│	├── drug_targets.csv
+│	├── oncogenes.csv
+│	└── signaling_network.gexf
 ├── outputs/
-│   ├── cancer_type_nodetype/
-│   │   ├── stats/
-│   │   ├── ppr/
-│   │   ├── dppr/
-│   │   ├── PEN_distance/
-│   │   ├── distance/
-│   │   └── plots/
-│   └── ...
+│	├── cancer_type_nodetype/
+│	│	├── stats/
+│	│	├── ppr/
+│	│	├── dppr/
+│	│	├── PEN_distance/
+│	│	├── distance/
+│	│	└── plots/
+│	└── ...
 └── README.txt
+```
