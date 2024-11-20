@@ -1,9 +1,3 @@
-Overview
-
-The Panacea Project is a computational framework designed to analyze cancer-specific signaling networks using network science methods.
-It aims to identify potential drug targets and understand the complex interactions within
-cancer networks by leveraging various network analysis techniques, including the computation of network statistics,
-distances, and profiling of gene combinations.
 
 Project Structure
 
@@ -83,7 +77,7 @@ Below is a summary of each module, their purposes, and how they interact with on
         •	target(...): Saves the constrained target combinations identified during profiling.
 	•	Usage: Called by Panacea_profiling_comb.py.
 
-10. Main Script (panacea.py)
+10. Main Script (PANACEA.py)
 
 	•	Purpose: Orchestrates the entire analysis process by coordinating the use of all the modules above.
 	•	Key Steps:
