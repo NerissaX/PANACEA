@@ -6,7 +6,7 @@ import pandas as pd
 import networkx as nx
 
 # list the path we will use in the project
-project_path = os.path.dirname(os.path.dirname(os.getcwd()))
+project_path = os.path.dirname(os.getcwd())
 output_path = os.path.join(project_path, 'Output')  # output path
 input_path = os.path.join(project_path, 'Input')  # input path
 
