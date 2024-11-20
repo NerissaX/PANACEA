@@ -52,7 +52,7 @@ def compute_network_stats(graph, filename, save_to):
     stats_file = os.path.join(save_to, f'{filename}.txt')
     if not os.path.exists(stats_file):
         with open(stats_file, 'w', encoding='utf-8') as f:
-            f.write(str(nx.info(graph)) + '\n')
+            f.write(f'DiGraph with {nx.number_of_nodes(graph)} nodes and {nx.number_of_edges(graph)} edges\n')
 
             # Density
             density = nx.density(graph)
@@ -86,8 +86,8 @@ def compute_network_stats(graph, filename, save_to):
                 'betweenness centrality': nx.betweenness_centrality(graph, weight='weight'),
                 'eigenvector centrality': nx.eigenvector_centrality(graph, max_iter=600, weight='weight'),
                 'degree': dict(graph.degree()),
-                'in-degree': dict(graph.in_degree()),
-                'out-degree': dict(graph.out_degree()),
+                'in degree': dict(graph.in_degree()),
+                'out degree': dict(graph.out_degree()),
                 'pagerank': nx.pagerank(graph, weight='weight')
             }
 
