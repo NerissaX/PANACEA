@@ -97,7 +97,7 @@ def PEN_distance_alpha(G, network_name, network_ppr_path, stat_network_path, net
     """
     for i in range(iterations):
         alpha = (i + 1) / 10  # Alpha values: 0.1, 0.2, ..., depending on iterations
-        alpha_str = f'alpha_{alpha}'
+        alpha_str = f'alpha = {alpha}'
 
         # Define paths for this alpha value
         dppr_path = os.path.join(network_dppr_path, alpha_str)
