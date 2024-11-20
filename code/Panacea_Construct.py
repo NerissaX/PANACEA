@@ -135,13 +135,13 @@ def constructNetwork(cancer_genes, nodetype, target_set, network, cancer_name):
 
         # Compute the PEN distance of the network
         PEN_distance.PEN_distance_alpha(
-            cancer_network,
-            cancer_name,
-            f'{base_path}/ppr',
-            f'{base_path}/stats',
-            f'{base_path}/dppr',
-            f'{base_path}/PEN_distance',
-            iter=2
+            G=cancer_network,
+            network_name=cancer_name,
+            network_ppr_path=f'{base_path}/ppr',
+            stat_network_path=f'{base_path}/stats',
+            network_dppr_path=f'{base_path}/dppr',
+            network_PEN_distance_path=f'{base_path}/PEN_distance',
+            iterations=2
         )
 
         # Compute the shortest distances in the network
